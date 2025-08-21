@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
+import Scanner from "./components/Scanner";
+import Item from "./components/Item";
 
 function App() {
+  const [cart, setCart] = useState([]);
+
+  // Add product to cart when scanned
+  const handleAddToCart = (product) => {
+    setCart((prevCart) => [...prevCart, product]);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Header /> {/* Always displayed on all pages */}
+      <Routes>
+        <Route path="/" element={<Scanner onAddToCart={handleAddToCart} />} />
+        <Route path="/item" element={<Item cart={cart} />} />
+      </Routes>
+    </Router>
   );
 }
 
