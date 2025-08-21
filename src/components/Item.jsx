@@ -1,34 +1,64 @@
 import React from "react";
 
-const Item = ({ cart }) => {
+const Item = ({ cart, onQuantityChange }) => {
+  // Calculate total of all items
+  const grandTotal = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
   return (
     <div style={{ textAlign: "center", marginTop: "20px" }}>
       <h2>🛒 Shopping Cart</h2>
       {cart.length === 0 ? (
         <p>No items scanned yet.</p>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          {cart.map((item, index) => (
-            <li
-              key={index}
-              style={{
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-                padding: "10px",
-                marginBottom: "10px",
-                maxWidth: "300px",
-                marginLeft: "auto",
-                marginRight: "auto"
-              }}
-            >
-              <h3>{item.name}</h3>
-              <p>Category: {item.category}</p>
-              <p>
-                <b>${item.price}</b>
-              </p>
-            </li>
-          ))}
-        </ul>
+        <>
+          <table
+            style={{
+              margin: "0 auto",
+              borderCollapse: "collapse",
+              width: "80%",
+              maxWidth: "600px"
+            }}
+          >
+            <thead>
+              <tr>
+                <th style={{ border: "1px solid #ccc", padding: "8px" }}>Item</th>
+                <th style={{ border: "1px solid #ccc", padding: "8px" }}>Category</th>
+                <th style={{ border: "1px solid #ccc", padding: "8px" }}>Price</th>
+                <th style={{ border: "1px solid #ccc", padding: "8px" }}>Quantity</th>
+                <th style={{ border: "1px solid #ccc", padding: "8px" }}>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cart.map((item, index) => (
+                <tr key={index}>
+                  <td style={{ border: "1px solid #ccc", padding: "8px" }}>{item.name}</td>
+                  <td style={{ border: "1px solid #ccc", padding: "8px" }}>{item.category}</td>
+                  <td style={{ border: "1px solid #ccc", padding: "8px" }}>₱{item.price}</td>
+                  <td style={{ border: "1px solid #ccc", padding: "8px" }}>
+                    <input
+                      type="number"
+                      min="1"
+                      value={item.quantity}
+                      onChange={(e) =>
+                        onQuantityChange(item.name, parseInt(e.target.value))
+                      }
+                      style={{ width: "60px", textAlign: "center" }}
+                    />
+                  </td>
+                  <td style={{ border: "1px solid #ccc", padding: "8px" }}>
+                    ₱{item.price * item.quantity}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Display Grand Total */}
+          <h3 style={{ marginTop: "15px" }}>Grand Total: ₱{grandTotal}</h3>
+        </>
       )}
     </div>
   );
